@@ -1,0 +1,30 @@
+<html>
+    <head>
+        {% if title %}
+        <title>{{ title }} - Микроблог</title>
+        {% else %}
+        <title>Добро пожаловать в Микроблог!</title>
+        {% endif %}
+    </head>
+    <body>
+        <div>Микроблог:
+            <a href="{{ url_for('index') }}">главная</a>
+            <a href="{{ url_for('login') }}">вход</a>
+        </div>
+        <hr>
+
+<!--Блок флэш сообщений-->
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+<!--Блок флэш сообщений окончание-->
+
+        {% block content %}{% endblock %}
+    </body>
+</html>
