@@ -9,6 +9,7 @@
     <body>
         <div>Микроблог:
             <a href="{{ url_for('index') }}"> Главная</a>
+            <a href="{{ url_for('explore') }}">Найти пользователей</a>
             {% if current_user.is_anonymous %}
             <a href="{{ url_for('login') }}"> Войти</a>
             {% else %}
