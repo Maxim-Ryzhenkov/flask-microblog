@@ -3,22 +3,31 @@ from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
+from flask_mail import Mail
+from flask_bootstrap import Bootstrap
 import logging
 from logging.handlers import SMTPHandler, RotatingFileHandler
 import os
 
-# Создать экзенмпляр приложения Flask
+# экзенмпляр приложения Flask
 app = Flask(__name__)
-# Задать конфигурацию приложения из импортированного класса
+# Загрузка конфигурации приложения из импортированного класса
 app.config.from_object(Config)
-# Создать коннектор базы данных
+
+# Создаём экземпляры для расширений Flask
+# коннектор базы данных
 db = SQLAlchemy(app)
-# Создать объект миграции базы данных
+# объект миграции базы данных
 migrate = Migrate(app, db)
-# Создать объект login менеджера пользовательской сессии
+
+# объект login менеджера пользовательской сессии
 login = LoginManager(app)
-# Объявить имя функции логина для поиска с помощью url_for
+# Объявляем имя функции логина для поиска с помощью url_for
 login.login_view = 'login'
+login.login_message = "Пожалуйста, войдите, чтобы открыть эту страницу."
+
+mail = Mail(app)
+bootstrap = Bootstrap(app)
 
 
 if not app.debug:
@@ -48,7 +57,7 @@ if not app.debug:
     app.logger.setLevel(logging.INFO)
     app.logger.info('Microblog startup')
 
-from app import routes, models, errors
+from app import routes, models#, errors
 from app.models import User, Post
 
 

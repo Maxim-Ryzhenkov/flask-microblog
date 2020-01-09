@@ -1,35 +1,39 @@
 {% extends "base.html" %}
 
-{% block content %}
-    <table>
-        <tr valign="top">
-            <td><img src="{{ user.avatar(128) }}"></td>
+{% block app_content %}
+    <table class="table table-hover">
+        <tr>
+            <td width="256px"><img src="{{ user.avatar(256) }}"></td>
             <td>
-                <h1> Пользователь: {{ user.username }}</h1>
-                {% if user.about_me %}
-                    <p>{{ user.about_me }}</p>
-                {% endif %}
-                {% if user.last_seen %}
-                    <p>Последний визит: {{ user.last_seen }}</p>
-                {% endif %}
-                <p>Подписчиков: {{ user.followers.count() }}, подписан на: {{ user.followed.count() }}
-                    {% if user.is_following(current_user) %}
-                        (в том числе на вас)
-                    {% endif %}</p>
+                <h1>Блогер: {{ user.username }}</h1>
+                {% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}
+                {% if user.last_seen %}<p>Последний раз его тут видели: {{ user.last_seen }}</p>{% endif %}
+                <p><b>{{ user.followers.count() }}</b> человек зачем-то на него подписались, а он подписался на <b>{{ user.followed.count() }}</b></p>
                 {% if user == current_user %}
-                    <p><a href="{{ url_for('edit_profile') }}">Редактировать профиль</a></p>
+                <p><a href="{{ url_for('edit_profile') }}">Приукрасить свой профиль</a></p>
                 {% elif not current_user.is_following(user) %}
-                    <p><a href="{{ url_for('follow', username=user.username) }}">Подписаться</a></p>
+                <p><a href="{{ url_for('follow', username=user.username) }}">Подписаться</a></p>
                 {% else %}
-                    <p>Вы подписаны (<a href="{{ url_for('unfollow', username=user.username) }}">отписаться</a>)</p>
+                <p><a href="{{ url_for('unfollow', username=user.username) }}">Отписаться</a></p>
                 {% endif %}
-
             </td>
         </tr>
     </table>
-
-    <hr>
     {% for post in posts %}
         {% include '_post.html' %}
     {% endfor %}
+    <nav aria-label="...">
+        <ul class="pager">
+            <li class="previous{% if not prev_url %} disabled{% endif %}">
+                <a href="{{ prev_url or '#' }}">
+                    <span aria-hidden="true">&larr;</span> К новым постам
+                </a>
+            </li>
+            <li class="next{% if not next_url %} disabled{% endif %}">
+                <a href="{{ next_url or '#' }}">
+                    К старым постам <span aria-hidden="true">&rarr;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
 {% endblock %}
